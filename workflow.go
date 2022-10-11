@@ -18,6 +18,7 @@ type Image struct {
 	Image         string `json:"image,omitempty"`
 	ServiceName   string `json:"service_name,omitempty"`
 	ServiceModule string `json:"service_module,omitempty"`
+	RegistryRepo  string `json:"registry_repo,omitempty"`
 }
 
 type BuildArgs struct {
@@ -34,6 +35,20 @@ type Repository struct {
 	RepoName string `json:"repo_name,omitempty" `
 	Branch   string `json:"branch,omitempty" `
 	PR       int    `json:"pr,omitempty"`
+}
+
+type FunctionTestReport struct {
+	Tests     int    `json:"tests,omitempty"`
+	Successes int    `json:"successes,omitempty"`
+	Failures  int    `json:"failures,omitempty"`
+	Skips     int    `json:"skips,omitempty"`
+	Errors    int    `json:"errors,omitempty"`
+	DetailURL string `json:"detail_url,omitempty"`
+}
+
+type TestReport struct {
+	TestName           string             `json:"test_name,omitempty"`
+	FunctionTestReport FunctionTestReport `json:"function_test_report,omitempty"`
 }
 
 type Workflow struct {
@@ -102,9 +117,6 @@ func (w *WorkflowService) GetWorkflowTask(opt *GetWorkflowTaskOptions, options .
 		return nil, resp, err
 	}
 
-	for _, task := range tasks {
-		fmt.Println(task)
-	}
 	return tasks, resp, err
 }
 
@@ -148,13 +160,28 @@ type GetWorkflowTaskDetailOptions struct {
 	PipelineName string `json:"pipelineName,omitempty"`
 }
 
-func (w *WorkflowService) GetWorkflowTaskDetail(opt *GetWorkflowTaskDetailOptions, options ...RequestOptionFunc) (*Response, error) {
+type GetWorkflowTaskDetailResponse struct {
+	WorkflowName string
+	EnvName      string
+	Status       string
+	Targets      []TargetArgs
+	Images       []Image
+	TestReports  []TestReport
+}
+
+func (w *WorkflowService) GetWorkflowTaskDetail(opt *GetWorkflowTaskDetailOptions, options ...RequestOptionFunc) (*GetWorkflowTaskDetailResponse, *Response, error) {
 	u := fmt.Sprintf("/directory/workflowTask/id/%d/pipelines/%s", opt.ID, opt.PipelineName)
 
 	req, err := w.client.NewRequest(http.MethodGet, u, nil, options)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return w.client.Do(req, nil)
+	task := new(GetWorkflowTaskDetailResponse)
+	resp, err := w.client.Do(req, &task)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return task, resp, err
 }
