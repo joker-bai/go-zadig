@@ -1,9 +1,9 @@
 package zadig
 
-// ClientOptionFunc can be used to customize a new GitLab API client.
+// ClientOptionFunc 自定义配置
 type ClientOptionFunc func(*Client) error
 
-// WithBaseURL sets the base URL for API requests to a custom endpoint.
+// WithBaseURL 设置baseURL
 func WithBaseURL(urlStr string) ClientOptionFunc {
 	return func(c *Client) error {
 		return c.setBaseURL(urlStr)
