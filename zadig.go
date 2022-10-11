@@ -60,7 +60,7 @@ func NewClient(token string, options ...ClientOptionFunc) (*Client, error) {
 func newClient(options ...ClientOptionFunc) (*Client, error) {
 	c := &Client{UserAgent: userAgent}
 
-	// Configure the HTTP client.
+	// 配置Http client
 	c.client = &retryablehttp.Client{
 		Backoff:      c.retryHTTPBackoff,
 		CheckRetry:   c.retryHTTPCheck,
@@ -71,10 +71,10 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 		RetryMax:     5,
 	}
 
-	// Set the default base URL.
+	// 设置baseurl
 	c.setBaseURL(defaultBaseURL)
 
-	// Apply any given client options.
+	// 添加额外参数
 	for _, fn := range options {
 		if fn == nil {
 			continue
@@ -89,11 +89,7 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 	return c, nil
 }
 
-// NewRequest creates a new API request. The method expects a relative URL
-// path that will be resolved relative to the base URL of the Client.
-// Relative URL paths should always be specified without a preceding slash.
-// If specified, the value pointed to by body is JSON encoded and included
-// as the request body.
+// NewRequest 创建API请求
 func (c *Client) NewRequest(method, path string, opt interface{}, options []RequestOptionFunc) (*retryablehttp.Request, error) {
 	u := *c.baseURL
 	unescaped, err := url.PathUnescape(path)
@@ -101,11 +97,11 @@ func (c *Client) NewRequest(method, path string, opt interface{}, options []Requ
 		return nil, err
 	}
 
-	// Set the encoded path data
+	// 设置路径信息
 	u.RawPath = c.baseURL.Path + path
 	u.Path = c.baseURL.Path + unescaped
 
-	// Create a request specific headers map.
+	// 添加headers
 	reqHeaders := make(http.Header)
 	reqHeaders.Set("Accept", "application/json")
 
@@ -155,13 +151,13 @@ func (c *Client) NewRequest(method, path string, opt interface{}, options []Requ
 	return req, nil
 }
 
-// BaseURL return a copy of the baseURL.
+// BaseURL 返回baseURL
 func (c *Client) BaseURL() *url.URL {
 	u := *c.baseURL
 	return &u
 }
 
-// setBaseURL sets the base URL for API requests to a custom endpoint.
+// setBaseURL 设置baseURL
 func (c *Client) setBaseURL(urlStr string) error {
 	// Make sure the given URL end with a slash
 	if !strings.HasSuffix(urlStr, "/") {
@@ -183,8 +179,7 @@ func (c *Client) setBaseURL(urlStr string) error {
 	return nil
 }
 
-// retryHTTPCheck provides a callback for Client.CheckRetry which
-// will retry both rate limit (429) and server (>= 500) errors.
+// retryHTTPCheck 重试
 func (c *Client) retryHTTPCheck(ctx context.Context, resp *http.Response, err error) (bool, error) {
 	if ctx.Err() != nil {
 		return false, ctx.Err()
@@ -198,8 +193,7 @@ func (c *Client) retryHTTPCheck(ctx context.Context, resp *http.Response, err er
 	return false, nil
 }
 
-// retryHTTPBackoff provides a generic callback for Client.Backoff which
-// will pass through all calls based on the status code of the response.
+// retryHTTPBackoff 重试失败
 func (c *Client) retryHTTPBackoff(min, max time.Duration, attemptNum int, resp *http.Response) time.Duration {
 	// Use the rate limit backoff function when we are rate limited.
 	if resp != nil && resp.StatusCode == 429 {
@@ -213,13 +207,6 @@ func (c *Client) retryHTTPBackoff(min, max time.Duration, attemptNum int, resp *
 	return retryablehttp.LinearJitterBackoff(min, max, attemptNum, resp)
 }
 
-// rateLimitBackoff provides a callback for Client.Backoff which will use the
-// RateLimit-Reset header to determine the time to wait. We add some jitter
-// to prevent a thundering herd.
-//
-// min and max are mainly used for bounding the jitter that will be added to
-// the reset time retrieved from the headers. But if the final wait time is
-// less then min, min will be used instead.
 func rateLimitBackoff(min, max time.Duration, attemptNum int, resp *http.Response) time.Duration {
 	// rnd is used to generate pseudo-random numbers.
 	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -241,9 +228,7 @@ func rateLimitBackoff(min, max time.Duration, attemptNum int, resp *http.Respons
 	return min + jitter
 }
 
-// Response is a GitLab API response. This wraps the standard http.Response
-// returned from GitLab and provides convenient access to things like
-// pagination links.
+// Response
 type Response struct {
 	*http.Response
 }
@@ -254,15 +239,9 @@ func newResponse(r *http.Response) *Response {
 	return response
 }
 
-// Do sends an API request and returns the API response. The API response is
-// JSON decoded and stored in the value pointed to by v, or returned as an
-// error if an API error has occurred. If v implements the io.Writer
-// interface, the raw response body will be written to v, without attempting to
-// first decode it.
+// Do 发送请求
 func (c *Client) Do(req *retryablehttp.Request, v interface{}) (*Response, error) {
 
-	// Set the correct authentication header. If using basic auth, then check
-	// if we already have a token and if not first authenticate and get one.
 	switch c.authType {
 	case OAuthToken:
 		if values := req.Header.Values("Authorization"); len(values) == 0 {
@@ -285,8 +264,6 @@ func (c *Client) Do(req *retryablehttp.Request, v interface{}) (*Response, error
 
 	err = CheckResponse(resp)
 	if err != nil {
-		// Even though there was an error, we still return the response
-		// in case the caller wants to inspect it further.
 		return response, err
 	}
 
@@ -313,7 +290,7 @@ func (e *ErrorResponse) Error() string {
 	return fmt.Sprintf("%s %s: %d %s", e.Response.Request.Method, u, e.Response.StatusCode, e.Message)
 }
 
-// CheckResponse checks the API response for errors, and returns them if present.
+// CheckResponse 检查返回信息
 func CheckResponse(r *http.Response) error {
 	switch r.StatusCode {
 	case 200, 201, 202, 204, 304:
