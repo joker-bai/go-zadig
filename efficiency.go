@@ -54,7 +54,7 @@ type Data struct {
 // 构建数据统计
 func (e *EfficiencyService) ListBuildDataStatistics(opt ListBuildDataStatistics, options ...RequestOptionFunc) (*ListBuildDataStatisticsResponse, *Response, error) {
 	path := "/openapi/statistics/build"
-	req, err := e.client.NewRequest(http.MethodPost, path, opt, options)
+	req, err := e.client.NewRequest(http.MethodGet, path, opt, options)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -82,7 +82,7 @@ type ListDeployDataStatisticsResponse struct {
 
 func (e *EfficiencyService) ListDeployDataStatistics(opt ListDeployDataStatistics, options ...RequestOptionFunc) (*ListDeployDataStatisticsResponse, *Response, error) {
 	path := "/openapi/statistics/deploy"
-	req, err := e.client.NewRequest(http.MethodPost, path, opt, options)
+	req, err := e.client.NewRequest(http.MethodGet, path, opt, options)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -119,7 +119,7 @@ type TestData struct {
 
 func (e *EfficiencyService) ListTestDataStatistics(opt ListTestDataStatistics, options ...RequestOptionFunc) (*ListTestDataStatisticsResponse, *Response, error) {
 	path := "/openapi/statistics/test"
-	req, err := e.client.NewRequest(http.MethodPost, path, opt, options)
+	req, err := e.client.NewRequest(http.MethodGet, path, opt, options)
 	if err != nil {
 		return nil, nil, err
 	}
