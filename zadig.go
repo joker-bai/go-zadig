@@ -20,7 +20,7 @@ import (
 
 const (
 	defaultBaseURL = "https://www.koderover.com"
-	apiVersionPath = "api"
+	apiVersionPath = ""
 	userAgent      = "go-zadig"
 
 	headerRateLimit = "RateLimit-Limit"
@@ -43,7 +43,8 @@ type Client struct {
 	disableRetries bool
 	UserAgent      string
 
-	Workflow *WorkflowService
+	Workflow   *WorkflowService
+	Efficiency *EfficiencyService
 }
 
 // NewClient 初始化Zadig Client
@@ -85,6 +86,7 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 	}
 
 	c.Workflow = &WorkflowService{client: c}
+	c.Efficiency = &EfficiencyService{client: c}
 
 	return c, nil
 }
