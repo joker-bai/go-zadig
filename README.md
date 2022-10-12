@@ -15,12 +15,12 @@ Zadig API 客户端，Go 程序可以简单的和 Zadig 进行交互。
 - [x] 获取构建数据统计
 - [x] 获取部署数据统计
 - [x] 获取测试数据统计
-- [] 获取交付中心版本列表
-- [] 获取交付物追踪信息
-- [] 获取自定义工作流任务详情
-- [] 执行自定义工作流
-- [] 取消自定义工作流
-- [] 自定义工作流人工审核
+- [ ] 获取交付中心版本列表
+- [ ] 获取交付物追踪信息
+- [ ] 获取自定义工作流任务详情
+- [ ] 执行自定义工作流
+- [ ] 取消自定义工作流
+- [ ] 自定义工作流人工审核
 
 ## 使用方式
 
@@ -51,7 +51,7 @@ func main() {
 
 	w, r, err := client.Workflow.GetWorkflowTaskDetail(&zadig.GetWorkflowTaskDetailOptions{
 		ID:           108,
-		PipelineName: "resico-uat",
+		PipelineName: "pipelineName",
 	})
 	if err != nil {
 		log.Fatalf("create workflow faield: %v", err)
