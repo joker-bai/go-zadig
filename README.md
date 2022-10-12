@@ -34,28 +34,28 @@ import "github.com/joker-bai/go-zadig"
 package main
 
 import (
-	"fmt"
-	"log"
+  "fmt"
+  "log"
 
-	"github.com/joker-bai/go-zadig"
+  "github.com/joker-bai/go-zadig"
 )
 
 var token = "xxxx"
 
 func main() {
-	client, err := zadig.NewClient(token, zadig.WithBaseURL("http://www.example.com/"))
-	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
-	}
+  client, err := zadig.NewClient(token, zadig.WithBaseURL("http://www.example.com/"))
+  if err != nil {
+    log.Fatalf("Failed to create client: %v", err)
+  }
 
 
-	w, r, err := client.Workflow.GetWorkflowTaskDetail(&zadig.GetWorkflowTaskDetailOptions{
-		ID:           108,
-		PipelineName: "pipelineName",
-	})
-	if err != nil {
-		log.Fatalf("create workflow faield: %v", err)
-	}
-	fmt.Println(w, r.Body)
+  w, r, err := client.Workflow.GetWorkflowTaskDetail(&zadig.GetWorkflowTaskDetailOptions{
+    ID:           108,
+    PipelineName: "pipelineName",
+  })
+  if err != nil {
+    log.Fatalf("create workflow faield: %v", err)
+  }
+  fmt.Println(w, r.Body)
 }
 ```
