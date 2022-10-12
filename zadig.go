@@ -43,8 +43,9 @@ type Client struct {
 	disableRetries bool
 	UserAgent      string
 
-	Workflow   *WorkflowService
-	Efficiency *EfficiencyService
+	Workflow       *WorkflowService
+	Efficiency     *EfficiencyService
+	DeliveryCenter *DeliveryCenterService
 }
 
 // NewClient 初始化Zadig Client
@@ -87,6 +88,7 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 
 	c.Workflow = &WorkflowService{client: c}
 	c.Efficiency = &EfficiencyService{client: c}
+	c.DeliveryCenter = &DeliveryCenterService{client: c}
 
 	return c, nil
 }
