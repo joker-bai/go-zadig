@@ -46,6 +46,7 @@ type Client struct {
 	Workflow       *WorkflowService
 	Efficiency     *EfficiencyService
 	DeliveryCenter *DeliveryCenterService
+	CustomWorkflow *CustomWorkflowService
 }
 
 // NewClient 初始化Zadig Client
@@ -89,6 +90,7 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 	c.Workflow = &WorkflowService{client: c}
 	c.Efficiency = &EfficiencyService{client: c}
 	c.DeliveryCenter = &DeliveryCenterService{client: c}
+	c.CustomWorkflow = &CustomWorkflowService{client: c}
 
 	return c, nil
 }
