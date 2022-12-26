@@ -28,7 +28,7 @@ type GetProjectListOptions struct {
 	Verbosity string `json:"Verbosity,omitempty"`
 }
 
-// GetProjectList  https://leyancd.nancalcloud.com/api/v1/picket/projects?verbosity=detailed
+// GetProjectList  https://xxx.com/api/v1/picket/projects?verbosity=detailed
 func (p *ProjectService) GetProjectList(opt *GetProjectListOptions, options ...RequestOptionFunc) (*ProjectListResponse, *Response, error) {
 
 	//path := "/api/aslan/workflow/workflow?projectName=" + opt.PorjectName

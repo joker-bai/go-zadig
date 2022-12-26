@@ -56,7 +56,7 @@ type GetWorkflowProjectNameOptions struct {
 	PorjectName string `json:"PorjectName,omitempty"`
 }
 
-// GetWorkflowByPorectName https://leyancd.nancalcloud.com/api/aslan/workflow/workflow?projectName=leyan-devops
+// GetWorkflowByPorectName https://xxx.com/api/aslan/workflow/workflow?projectName=leyan-devops
 func (w *WorkflowProjectService) GetWorkflowByPorectName(opt *GetWorkflowProjectNameOptions, options ...RequestOptionFunc) (*WorkflowProjectResponse, *Response, error) {
 
 	//path := "/api/aslan/workflow/workflow?projectName=" + opt.PorjectName
