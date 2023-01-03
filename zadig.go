@@ -45,6 +45,7 @@ type Client struct {
 
 	Workflow        *WorkflowService
 	WorkflowProject *WorkflowProjectService
+	WorkflowPreset  *WorkflowPresetService
 	Project         *ProjectService
 	Environment     *EnvironmentService
 	PickBuild       *pickBuildService
@@ -93,6 +94,7 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 
 	c.Workflow = &WorkflowService{client: c}
 	c.WorkflowProject = &WorkflowProjectService{client: c}
+	c.WorkflowPreset = &WorkflowPresetService{client: c}
 	c.Project = &ProjectService{client: c}
 	c.Environment = &EnvironmentService{client: c}
 	c.PickBuild = &pickBuildService{client: c}
