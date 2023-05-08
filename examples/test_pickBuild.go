@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/joker-bai/go-zadig"
 	"log"
+
+	"github.com/joker-bai/go-zadig"
 )
 
-func main() {
+func test_pickBuild() {
 
 	client, err := zadig.NewClient(
 		"token",

@@ -116,7 +116,7 @@ type ExecWorkflowTaskResponse struct {
 }
 
 func (w *WorkflowService) ExecWorkflowTask(opt *ExecWorkflowTaskOptions, options ...RequestOptionFunc) (*ExecWorkflowTaskResponse, *Response, error) {
-	path := "/openapi/workflows/product/task"
+	path := "openapi/workflows/product/task"
 	req, err := w.client.NewRequest(http.MethodPost, path, opt, options)
 	if err != nil {
 		return nil, nil, err
@@ -147,7 +147,7 @@ type WorkflowTask struct {
 
 // GetWorkflowTaskStatus 获取工作流任务状态
 func (w *WorkflowService) GetWorkflowTaskStatus(opt *GetWorkflowTaskOptions, options ...RequestOptionFunc) ([]*WorkflowTask, *Response, error) {
-	path := "/api/directory/workflowTask"
+	path := "api/directory/workflowTask"
 	req, err := w.client.NewRequest(http.MethodGet, path, opt, options)
 	if err != nil {
 		return nil, nil, err
@@ -170,7 +170,7 @@ type CanalWorkflowTaskOptions struct {
 
 // CanalWorkflowTask 取消工作流任务
 func (w *WorkflowService) CanalWorkflowTask(opt *CanalWorkflowTaskOptions, options ...RequestOptionFunc) (*Response, error) {
-	u := fmt.Sprintf("/api/directory/workflowTask/id/%d/pipelines/%s/cancel", opt.ID, opt.PipelineName)
+	u := fmt.Sprintf("api/directory/workflowTask/id/%d/pipelines/%s/cancel", opt.ID, opt.PipelineName)
 
 	req, err := w.client.NewRequest(http.MethodPost, u, nil, options)
 	if err != nil {
@@ -188,7 +188,7 @@ type RestartWorkflowTaskOptions struct {
 
 // RestartWorkflowTask 重试工作流任务
 func (w *WorkflowService) RestartWorkflowTask(opt *RestartWorkflowTaskOptions, options ...RequestOptionFunc) (*Response, error) {
-	u := fmt.Sprintf("/api/directory/workflowTask/id/%d/pipelines/%s/restart", opt.ID, opt.PipelineName)
+	u := fmt.Sprintf("api/directory/workflowTask/id/%d/pipelines/%s/restart", opt.ID, opt.PipelineName)
 
 	req, err := w.client.NewRequest(http.MethodPost, u, nil, options)
 	if err != nil {
@@ -215,7 +215,7 @@ type GetWorkflowTaskDetailResponse struct {
 
 // GetWorkflowTaskDetail 获取工作流任务详情
 func (w *WorkflowService) GetWorkflowTaskDetail(opt *GetWorkflowTaskDetailOptions, options ...RequestOptionFunc) (*GetWorkflowTaskDetailResponse, *Response, error) {
-	u := fmt.Sprintf("/api/directory/workflowTask/id/%d/pipelines/%s", opt.ID, opt.PipelineName)
+	u := fmt.Sprintf("api/directory/workflowTask/id/%d/pipelines/%s", opt.ID, opt.PipelineName)
 
 	req, err := w.client.NewRequest(http.MethodGet, u, nil, options)
 	if err != nil {
