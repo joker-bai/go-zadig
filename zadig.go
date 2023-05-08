@@ -147,8 +147,8 @@ func (c *Client) NewRequest(method, path string, opt interface{}, options []Requ
 	fullUrl := u.Scheme + "://" + u.Host + u.Path
 
 	//这里get方法path中如果有问号?  会转义  3f%  所以自己拼了下
-	fmt.Println(u.String())
-	fmt.Println(fullUrl)
+	// fmt.Println(u.String())
+	// fmt.Println(fullUrl)
 
 	req, err := retryablehttp.NewRequest(method, fullUrl, body)
 	if err != nil {
