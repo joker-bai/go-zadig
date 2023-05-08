@@ -60,28 +60,69 @@ type Workflow struct {
 }
 
 // 执行工作流
-type CreateWorkflowTaskOptions struct {
-	WorkflowName  string       `json:"workflow_name,omitempty"`
-	EnvName       string       `json:"env_name,omitempty"`
-	ReleaseImages []Image      `json:"release_images,omitempty"`
-	Targets       []TargetArgs `json:"targets,omitempty"`
-	Callback      Callback     `json:"callback,omitempty"`
+type ExecWorkflowTaskOptions struct {
+	WorkflowName string        `json:"workflow_name"`
+	ProjectName  string        `json:"project_name"`
+	Input        WorkflowInput `json:"input"`
 }
 
-type CreateWorkflowTaskResponse struct {
+type WorkflowInput struct {
+	TargetEnv string         `json:"target_env,omitempty"`
+	Build     ExecBuildArgs  `json:"build"`
+	Deploy    ExecDeployArgs `json:"deploy"`
+}
+
+type ExecBuildArgs struct {
+	Enabled     bool               `json:"enabled"`
+	ServiceList []BuildServiceInfo `json:"service_list"`
+}
+
+type BuildServiceInfo struct {
+	ServiceModule string           `json:"service_module"`
+	ServiceName   string           `json:"service_name"`
+	RepoInfo      []RepositoryInfo `json:"repo_info"`
+	Inputs        []UserInput      `json:"inputs"`
+}
+
+type RepositoryInfo struct {
+	CodehostName  string `json:"codehost_name"`
+	RepoNamespace string `json:"repo_namespace"`
+	RepoName      string `json:"repo_name"`
+	Branch        string `json:"branch"`
+	PR            int    `json:"pr"`
+}
+
+type UserInput struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
+type ExecDeployArgs struct {
+	Enabled     bool                `json:"enabled"`
+	Source      string              `json:"source"`
+	ServiceList []DeployServiceInfo `json:"service_list"`
+}
+
+type DeployServiceInfo struct {
+	ServiceModule string `json:"service_module"`
+	ServiceName   string `json:"service_name"`
+	Image         string `json:"image"`
+}
+
+type ExecWorkflowTaskResponse struct {
 	ProjectName  string `json:"project_name,omitempty"`
 	WorkflowName string `json:"workflow_name,omitempty"`
 	TaskID       int64  `json:"task_id,omitempty"`
 }
 
-func (w *WorkflowService) CreateWorkflowTask(opt *CreateWorkflowTaskOptions, options ...RequestOptionFunc) (*CreateWorkflowTaskResponse, *Response, error) {
-	path := "/api/directory/workflowTask/create"
+func (w *WorkflowService) ExecWorkflowTask(opt *ExecWorkflowTaskOptions, options ...RequestOptionFunc) (*ExecWorkflowTaskResponse, *Response, error) {
+	path := "/openapi/workflows/product/task"
 	req, err := w.client.NewRequest(http.MethodPost, path, opt, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	task := new(CreateWorkflowTaskResponse)
+	task := new(ExecWorkflowTaskResponse)
 	resp, err := w.client.Do(req, &task)
 	if err != nil {
 		return nil, resp, err
@@ -92,7 +133,7 @@ func (w *WorkflowService) CreateWorkflowTask(opt *CreateWorkflowTaskOptions, opt
 
 // 获取工作流任务状态
 type GetWorkflowTaskOptions struct {
-	CommitId string `url:"commitId,omitempty" json:"commitId,omitempty"`
+	CommitId string `url:"commitId" json:"commitId"`
 }
 
 type WorkflowTask struct {
@@ -104,7 +145,8 @@ type WorkflowTask struct {
 	Url        string `json:"url,omitempty"`
 }
 
-func (w *WorkflowService) GetWorkflowTask(opt *GetWorkflowTaskOptions, options ...RequestOptionFunc) ([]*WorkflowTask, *Response, error) {
+// GetWorkflowTaskStatus 获取工作流任务状态
+func (w *WorkflowService) GetWorkflowTaskStatus(opt *GetWorkflowTaskOptions, options ...RequestOptionFunc) ([]*WorkflowTask, *Response, error) {
 	path := "/api/directory/workflowTask"
 	req, err := w.client.NewRequest(http.MethodGet, path, opt, options)
 	if err != nil {
@@ -126,6 +168,7 @@ type CanalWorkflowTaskOptions struct {
 	PipelineName string `json:"pipelineName,omitempty"`
 }
 
+// CanalWorkflowTask 取消工作流任务
 func (w *WorkflowService) CanalWorkflowTask(opt *CanalWorkflowTaskOptions, options ...RequestOptionFunc) (*Response, error) {
 	u := fmt.Sprintf("/api/directory/workflowTask/id/%d/pipelines/%s/cancel", opt.ID, opt.PipelineName)
 
@@ -139,10 +182,11 @@ func (w *WorkflowService) CanalWorkflowTask(opt *CanalWorkflowTaskOptions, optio
 
 // 工作流任务重试
 type RestartWorkflowTaskOptions struct {
-	ID           int64  `json:"id,omitempty"`
-	PipelineName string `json:"pipelineName,omitempty"`
+	ID           int64  `json:"id"`
+	PipelineName string `json:"pipelineName"`
 }
 
+// RestartWorkflowTask 重试工作流任务
 func (w *WorkflowService) RestartWorkflowTask(opt *RestartWorkflowTaskOptions, options ...RequestOptionFunc) (*Response, error) {
 	u := fmt.Sprintf("/api/directory/workflowTask/id/%d/pipelines/%s/restart", opt.ID, opt.PipelineName)
 
@@ -169,6 +213,7 @@ type GetWorkflowTaskDetailResponse struct {
 	TestReports  []TestReport
 }
 
+// GetWorkflowTaskDetail 获取工作流任务详情
 func (w *WorkflowService) GetWorkflowTaskDetail(opt *GetWorkflowTaskDetailOptions, options ...RequestOptionFunc) (*GetWorkflowTaskDetailResponse, *Response, error) {
 	u := fmt.Sprintf("/api/directory/workflowTask/id/%d/pipelines/%s", opt.ID, opt.PipelineName)
 
