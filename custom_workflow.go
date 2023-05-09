@@ -203,7 +203,7 @@ type CreateCustomWorkflowTaskResponse struct {
 }
 
 func (c *CustomWorkflowService) CreateCustomWorkflowTask(opt *CreateCustomWorkflowTask, options ...RequestOptionFunc) (*CreateCustomWorkflowTaskResponse, *Response, error) {
-	path := "/openapi/workflows/custom/task"
+	path := "openapi/workflows/custom/task"
 	req, err := c.client.NewRequest(http.MethodPost, path, opt, options)
 	if err != nil {
 		return nil, nil, err
@@ -233,7 +233,7 @@ type DeleteCustomWorkflowTaskResponse struct {
 }
 
 func (c *CustomWorkflowService) DeleteCustomWorkflowTask(opt *DeleteCustomWorkflowTask, options ...RequestOptionFunc) (*DeleteCustomWorkflowTaskResponse, *Response, error) {
-	path := "/openapi/workflows/custom/task"
+	path := "openapi/workflows/custom/task"
 	req, err := c.client.NewRequest(http.MethodDelete, path, opt, options)
 	if err != nil {
 		return nil, nil, err
@@ -266,7 +266,7 @@ type AuditCustomWorkflowTaskResponse struct {
 }
 
 func (c *CustomWorkflowService) AuditCustomWorkflowTask(opt *AuditCustomWorkflowTask, options ...RequestOptionFunc) (*AuditCustomWorkflowTaskResponse, *Response, error) {
-	path := "/openapi/workflows/custom/task/approve"
+	path := "openapi/workflows/custom/task/approve"
 	req, err := c.client.NewRequest(http.MethodPost, path, opt, options)
 	if err != nil {
 		return nil, nil, err
