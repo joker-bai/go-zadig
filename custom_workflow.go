@@ -176,7 +176,7 @@ type RepoInfo struct {
 }
 
 type CreateCustomWorkflowTaskParameters struct {
-	Register    string        `json:"register,omitempty"`
+	Registry    string        `json:"registry,omitempty"`
 	EnvName     string        `json:"env_name,omitempty"` // 待部署环境信息，若设置为固定值或全局变量，则无需配置该字段
 	ServiceList []ServiceList `json:"service_list,omitempty"`
 	TargetList  []TargetList  `json:"target_list,omitempty"` // 待部署容器信息，若设置为固定值，则无需指定
